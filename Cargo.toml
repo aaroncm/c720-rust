@@ -6,3 +6,4 @@ authors = ["Aaron Malone <aaron@munge.net>"]
 [dependencies]
 serde_json = "1.0"
 rayon = "0.7.0"
+indicatif = "0.8.0"

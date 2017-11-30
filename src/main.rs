@@ -8,11 +8,15 @@ use indicatif::ProgressBar;
 use std::process::Command;
 use std::path::Path;
 use std::error::Error;
-use std::fs;
 
 fn main() {
-    let path = &Path::new(".");
-    let entries: Vec<_> = fs::read_dir(path).unwrap().collect();
+    let args: Vec<_> = std::env::args().collect();
+    let path = Path::new(match args.len() {
+        1 => Path::new("."),
+        _ => Path::new(&args[1]),
+    });
+
+    let entries: Vec<_> = std::fs::read_dir(path).unwrap().collect();
     let pbar = ProgressBar::new(entries.len() as u64);
     let over: Vec<_> = entries
         .par_iter()

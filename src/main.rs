@@ -41,11 +41,12 @@ fn is_over_720p(filename: &str) -> Result<bool, Box<Error>> {
     let output = Command::new("ffprobe").args(args).output()?;
     let stdout = std::str::from_utf8(&output.stdout)?;
     let probe: Value = serde_json::from_str(stdout)?;
-    match probe["streams"] {
-        Value::Array(ref streams) => Ok(streams.iter().any(|s| match s["height"] {
+    if let Value::Array(ref streams) = probe["streams"] {
+        Ok(streams.iter().any(|s| match s["height"] {
             Value::Number(ref n) => n.as_i64().unwrap() > 720,
             _ => false,
-        })),
-        _ => Ok(false),
+        }))
+    } else {
+        Ok(false)
     }
 }

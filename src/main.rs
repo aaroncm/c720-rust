@@ -16,12 +16,16 @@ fn main() {
         _ => Path::new(&args[1]),
     });
 
-    let entries: Vec<_> = std::fs::read_dir(path).unwrap().collect();
+    // let entries: Vec<_> = std::fs::read_dir(path).unwrap().collect();
+    let entries: Vec<_> = std::fs::read_dir(path)
+        .unwrap()
+        .map(|e| e.unwrap())
+        .collect();
     let pbar = ProgressBar::new(entries.len() as u64);
     let over: Vec<_> = entries
         .par_iter()
         .filter_map(|entry| {
-            let fname = entry.as_ref().unwrap().path().to_str().unwrap().to_owned();
+            let fname = entry.path().to_str().unwrap().to_owned();
             let result = is_over_720p(&fname);
             pbar.inc(1);
             match result {

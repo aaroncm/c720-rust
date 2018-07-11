@@ -2,12 +2,12 @@ extern crate indicatif;
 extern crate rayon;
 extern crate serde_json;
 
-use serde_json::Value;
-use rayon::prelude::*;
 use indicatif::ProgressBar;
-use std::process::Command;
-use std::path::Path;
+use rayon::prelude::*;
+use serde_json::Value;
 use std::error::Error;
+use std::path::Path;
+use std::process::Command;
 
 fn main() {
     let args: Vec<_> = std::env::args().collect();

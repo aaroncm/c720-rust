@@ -44,7 +44,7 @@ fn main() {
     }
 }
 
-fn is_over_720p(filename: &str) -> Result<bool, Box<Error>> {
+fn is_over_720p(filename: &str) -> Result<bool, Box<dyn Error>> {
     let args = &["-v", "quiet", "-of", "json", "-show_streams", filename];
     let output = Command::new("ffprobe").args(args).output()?;
     let stdout = std::str::from_utf8(&output.stdout)?;

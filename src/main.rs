@@ -2,7 +2,7 @@ extern crate indicatif;
 extern crate rayon;
 extern crate serde_json;
 
-use indicatif::ProgressBar;
+use indicatif::{ProgressBar, ProgressStyle};
 use rayon::prelude::*;
 use serde_json::Value;
 use std::error::Error;
@@ -22,6 +22,10 @@ fn main() {
         .map(|e| e.unwrap())
         .collect();
     let pbar = ProgressBar::new(entries.len() as u64);
+    pbar.set_style(
+        ProgressStyle::default_bar()
+            .template("{spinner} [{elapsed_precise}] [{bar:40}] {pos}/{len} ({eta})"),
+    );
     let over: Vec<_> = entries
         .par_iter()
         .filter_map(|entry| {

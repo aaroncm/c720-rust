@@ -16,10 +16,9 @@ fn main() {
         _ => Path::new(&args[1]),
     });
 
-    // let entries: Vec<_> = std::fs::read_dir(path).unwrap().collect();
     let entries: Vec<_> = std::fs::read_dir(path)
         .unwrap()
-        .map(|e| e.unwrap())
+        .filter_map(Result::ok)
         .collect();
     let pbar = ProgressBar::new(entries.len() as u64);
     pbar.set_style(

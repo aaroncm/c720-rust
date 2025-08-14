@@ -2,6 +2,7 @@
 name = "c720"
 version = "0.2.0"
 authors = ["Aaron Malone <aaron@munge.net>"]
+edition = "2024"
 
 [dependencies]
 serde_json = "1.0.81"

@@ -9,21 +9,18 @@ use std::error::Error;
 use std::path::Path;
 use std::process::Command;
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().collect();
     let path = Path::new(match args.len() {
         1 => Path::new("."),
         _ => Path::new(&args[1]),
     });
 
-    let entries: Vec<_> = std::fs::read_dir(path)
-        .unwrap()
-        .filter_map(Result::ok)
-        .collect();
+    let entries: Vec<_> = std::fs::read_dir(path)?.filter_map(Result::ok).collect();
     let pbar = ProgressBar::new(entries.len() as u64);
     pbar.set_style(
         ProgressStyle::default_bar()
-            .template("{spinner} [{elapsed_precise}] [{bar:40}] {pos}/{len} ({eta})"),
+            .template("{spinnerx} [{elapsed_precise}] [{bar:40}] {pos}/{len} ({eta})"),
     );
     let over: Vec<_> = entries
         .par_iter()
@@ -32,15 +29,16 @@ fn main() {
             let result = is_over_720p(&fname);
             pbar.inc(1);
             match result {
-                Ok(true) => Some(fname),
+                Ok(true) => Some(entry),
                 _ => None,
             }
         })
         .collect();
     pbar.finish();
     for fname in over {
-        println!("{}", fname);
+        println!("{}", fname.file_name().into_string().unwrap());
     }
+    Ok(())
 }
 
 fn is_over_720p(filename: &str) -> Result<bool, Box<dyn Error>> {
